@@ -298,7 +298,7 @@
         e.preventDefault();
         var user = usernameInput.value.trim();
         var pass = passwordInput.value.trim();
-        if (user === 'admin' && pass === '1234') {
+        if (user === 'auditor' && pass === '123456') {
             loginError.classList.add('hidden');
             isAuth = true;
             navigateTo('/dashboard');
@@ -349,7 +349,7 @@
         }
 
         console.log('✅ Сайт с чистыми URL запущен');
-        console.log('Логин: admin / 1234');
+        console.log('Логин: auditor / 123456');
         console.log('Доступные маршруты:');
         console.log('  /                      — главная');
         console.log('  /login                 — вход');
