@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Перенаправление</title>
+    <script>
+        // Сохраняем текущий путь
+        var path = window.location.pathname + window.location.search + window.location.hash;
+
+        // Перенаправляем на index.html с параметром redirect
+        window.location.replace('/?redirect=' + encodeURIComponent(path));
+    </script>
+</head>
+<body>
+    <p>Перенаправление...</p>
+</body>
+</html>
