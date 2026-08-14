@@ -8,26 +8,15 @@
     var level2Screen = document.getElementById('level2Screen');
     var level3Screen = document.getElementById('level3Screen');
 
-    var goToLoginBtn = document.getElementById('goToLoginBtn');
-    var goToDashboardBtn = document.getElementById('goToDashboardBtn');
-    var backToHomeFromLogin = document.getElementById('backToHomeFromLogin');
-    var backToHomeFromDashboard = document.getElementById('backToHomeFromDashboard');
-
     var loginForm = document.getElementById('loginForm');
     var loginError = document.getElementById('loginError');
     var usernameInput = document.getElementById('usernameInput');
     var passwordInput = document.getElementById('passwordInput');
-    var logoutBtnDashboard = document.getElementById('logoutBtnDashboard');
-    var logoutBtnL2 = document.getElementById('logoutBtnL2');
-    var logoutBtnL3 = document.getElementById('logoutBtnL3');
 
-    var level1List = document.getElementById('level1List');
     var level2List = document.getElementById('level2List');
     var level2Title = document.getElementById('level2Title');
     var level2Url = document.getElementById('level2Url');
     var l2BreadcrumbSection = document.getElementById('l2BreadcrumbSection');
-    var l2BreadcrumbBack = document.getElementById('l2BreadcrumbBack');
-    var backToDashboardFromL2 = document.getElementById('backToDashboardFromL2');
 
     var level3Title = document.getElementById('level3Title');
     var level3Url = document.getElementById('level3Url');
@@ -170,6 +159,7 @@
                 showLevel3Screen(sectionSlug, subSlug);
                 return;
             } else {
+                // Если подстраница не найдена — редирект на раздел
                 navigateTo('/' + sectionSlug);
                 return;
             }
@@ -179,7 +169,6 @@
         navigateTo('/');
     }
 
-    // ----- Навигация с обновлением URL -----
     function navigateTo(path) {
         if (path.charAt(0) !== '/') path = '/' + path;
         window.history.pushState({ path: path }, '', path);
@@ -197,11 +186,12 @@
 
     function showHomeScreen() {
         showScreen(homeScreen);
-        goToLoginBtn.style.display = 'inline-flex';
-        goToDashboardBtn.style.display = isAuth ? 'inline-flex' : 'none';
+        var dashboardLink = document.querySelector('[data-test-id="home-go-to-dashboard"]');
+        if (dashboardLink) {
+            dashboardLink.style.display = isAuth ? 'inline-flex' : 'none';
+        }
         currentSectionId = null;
         currentSubSlug = null;
-        document.querySelector('[data-test-id="home-url"]').textContent = '/';
     }
 
     function showLoginScreen() {
@@ -235,25 +225,13 @@
         for (var subSlug in section.subs) {
             var subData = section.subs[subSlug];
             html += `
-                <div class="page-list-item" data-sub="${subSlug}" data-test-id="sub-${subSlug}">
+                <a href="${subData.url}" class="page-list-item" data-sub="${subSlug}" data-test-id="sub-${subSlug}" style="text-decoration: none; color: inherit;">
                     <span>📄 ${subData.title}</span>
                     <span class="sub-badge">${subData.url}</span>
-                </div>
+                </a>
             `;
         }
         level2List.innerHTML = html;
-
-        var items = level2List.querySelectorAll('.page-list-item');
-        for (var i = 0; i < items.length; i++) {
-            (function(item) {
-                item.addEventListener('click', function() {
-                    var subSlug = this.dataset.sub;
-                    if (subSlug) {
-                        navigateTo(section.url + '/' + subSlug);
-                    }
-                });
-            })(items[i]);
-        }
 
         showScreen(level2Screen);
     }
@@ -263,7 +241,10 @@
         var section = sections[sectionSlug];
         if (!section) { navigateTo('/dashboard'); return; }
         var sub = section.subs[subSlug];
-        if (!sub) { navigateTo('/' + sectionSlug); return; }
+        if (!sub) {
+            navigateTo('/' + sectionSlug);
+            return;
+        }
 
         currentSectionId = sectionSlug;
         currentSubSlug = subSlug;
@@ -276,12 +257,10 @@
         level3Content.innerHTML = '<h3 style="margin-bottom:10px; color:#0b2a3f;" data-test-id="level3-page-title">' + sub
             .title + '</h3>' + sub.content;
 
-        l3BreadcrumbSection.onclick = function() {
-            navigateTo(section.url);
-        };
-        l3BreadcrumbSub.onclick = function() {
-            navigateTo(section.url);
-        };
+        // Обновляем ссылки в хлебных крошках
+        l3BreadcrumbSection.href = section.url;
+        l3BreadcrumbSub.href = section.url;
+        backToLevel2FromL3.href = section.url;
 
         showScreen(level3Screen);
     }
@@ -294,27 +273,32 @@
 
     // ----- Обработчики -----
 
-    goToLoginBtn.addEventListener('click', function() {
-        navigateTo('/login');
+    // Общий обработчик для всех ссылок
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('a');
+        if (!link) return;
+
+        // Пропускаем ссылки с target="_blank", download, внешние ссылки
+        if (link.target === '_blank' || link.hasAttribute('download')) {
+            return;
+        }
+
+        var href = link.getAttribute('href');
+        if (!href || href.startsWith('http') || href.startsWith('//') || href.startsWith('#')) {
+            return;
+        }
+
+        // Обрабатываем только относительные ссылки
+        e.preventDefault();
+        navigateTo(href);
     });
 
-    goToDashboardBtn.addEventListener('click', function() {
-        navigateTo('/dashboard');
-    });
-
-    backToHomeFromLogin.addEventListener('click', function() {
-        navigateTo('/');
-    });
-
-    backToHomeFromDashboard.addEventListener('click', function() {
-        navigateTo('/');
-    });
-
+    // Авторизация
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         var user = usernameInput.value.trim();
         var pass = passwordInput.value.trim();
-        if (user === 'auditor' && pass === '123456') {
+        if (user === 'admin' && pass === '1234') {
             loginError.classList.add('hidden');
             isAuth = true;
             navigateTo('/dashboard');
@@ -330,53 +314,12 @@
         loginError.classList.add('hidden');
     });
 
-    logoutBtnDashboard.addEventListener('click', function() {
-        isAuth = false;
-        navigateTo('/');
-    });
-    logoutBtnL2.addEventListener('click', function() {
-        isAuth = false;
-        navigateTo('/');
-    });
-    logoutBtnL3.addEventListener('click', function() {
-        isAuth = false;
-        navigateTo('/');
-    });
-
-    var level1Items = level1List.querySelectorAll('.page-list-item');
-    for (var i = 0; i < level1Items.length; i++) {
-        (function(item) {
-            item.addEventListener('click', function() {
-                var slug = this.dataset.slug;
-                if (slug && sections[slug]) {
-                    navigateTo('/' + slug);
-                }
-            });
-        })(level1Items[i]);
-    }
-
-    backToDashboardFromL2.addEventListener('click', function() {
-        navigateTo('/dashboard');
-    });
-    l2BreadcrumbBack.addEventListener('click', function() {
-        navigateTo('/dashboard');
-    });
-
-    backToLevel2FromL3.addEventListener('click', function() {
-        if (currentSectionId) {
-            navigateTo('/' + currentSectionId);
-        } else {
-            navigateTo('/dashboard');
-        }
-    });
-
     // ----- Обработка редиректа для GitHub Pages -----
     function handleRedirect() {
         var urlParams = new URLSearchParams(window.location.search);
         var redirectPath = urlParams.get('redirect');
 
         if (redirectPath) {
-            // Убираем параметр redirect из URL
             window.history.replaceState({}, '', redirectPath);
             return redirectPath;
         }
@@ -385,12 +328,20 @@
 
     // ----- Инициализация -----
     function init() {
-        // Проверяем редирект от 404.html (для GitHub Pages)
         var redirectPath = handleRedirect();
-
         var initialPath = redirectPath || window.location.pathname || '/';
 
-        // Если путь не корень и не содержит точку (не файл)
+        // Проверяем, есть ли путь подстраницы
+        var subMatch = initialPath.match(/^\/(products|services|company)\/([^/]+)$/);
+        if (subMatch) {
+            var sectionSlug = subMatch[1];
+            var subSlug = subMatch[2];
+            if (sections[sectionSlug] && sections[sectionSlug].subs[subSlug]) {
+                navigate(initialPath);
+                return;
+            }
+        }
+
         if (initialPath !== '/' && !initialPath.match(/\.[a-zA-Z0-9]+$/)) {
             navigate(initialPath);
         } else {
@@ -398,7 +349,7 @@
         }
 
         console.log('✅ Сайт с чистыми URL запущен');
-        console.log('Логин: auditor / 123456');
+        console.log('Логин: admin / 1234');
         console.log('Доступные маршруты:');
         console.log('  /                      — главная');
         console.log('  /login                 — вход');
@@ -417,6 +368,5 @@
         console.log('  /company/contacts      — Контакты');
     }
 
-    // Запускаем инициализацию
     init();
 })();
