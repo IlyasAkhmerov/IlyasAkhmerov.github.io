@@ -431,11 +431,11 @@
             <form id="loginForm" autocomplete="off" data-test-id="login-form">
                 <div class="form-group">
                     <label for="usernameInput" data-test-id="login-username-label">Логин</label>
-                    <input type="text" id="usernameInput" placeholder="admin" value="admin" data-test-id="login-username-input" />
+                    <input type="text" id="usernameInput" placeholder="auditor" value="auditor" data-test-id="login-username-input" />
                 </div>
                 <div class="form-group">
                     <label for="passwordInput" data-test-id="login-password-label">Пароль</label>
-                    <input type="password" id="passwordInput" placeholder="••••••••" value="1234" data-test-id="login-password-input" />
+                    <input type="password" id="passwordInput" placeholder="••••••••" value="123456" data-test-id="login-password-input" />
                 </div>
                 <button type="submit" class="btn" data-test-id="login-submit-btn">Войти</button>
             </form>
@@ -443,7 +443,7 @@
                 <button id="backToHomeFromLogin" class="btn btn-outline btn-sm" data-test-id="login-back-home">← На главную</button>
             </div>
             <div style="margin-top: 12px; font-size: 0.82rem; color: #4b6e86; background: #e7f0f8; padding: 8px 16px; border-radius: 40px; text-align: center;" data-test-id="login-demo">
-                ⚡ demo: admin / 1234
+                ⚡ demo: auditor / 123456
             </div>
         </div>
 
@@ -838,7 +838,7 @@
                 e.preventDefault();
                 var user = usernameInput.value.trim();
                 var pass = passwordInput.value.trim();
-                if (user === 'admin' && pass === '1234') {
+                if (user === 'auditor' && pass === '123456') {
                     loginError.classList.add('hidden');
                     isAuth = true;
                     setHash('/dashboard');
@@ -903,7 +903,7 @@
             }
 
             console.log('✅ Сайт с data-test-id запущен');
-            console.log('Логин: admin / 1234');
+            console.log('Логин: auditor / 123456');
         })();
     </script>
 </body>
