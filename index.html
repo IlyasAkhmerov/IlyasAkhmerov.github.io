@@ -1,600 +1,941 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Трехуровневый сайт · экранная навигация</title>
-  <style>
-    /* ----- общая база ----- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Трехуровневый сайт · человеческие URL</title>
+    <style>
+        /* ----- общая база ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
 
-    body {
-      background: linear-gradient(145deg, #f0f5fa 0%, #dce7f0 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+        body {
+            background: linear-gradient(145deg, #f0f5fa 0%, #dce7f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    .app-card {
-      max-width: 720px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-radius: 48px;
-      box-shadow: 0 24px 48px rgba(0, 20, 40, 0.2), 0 8px 16px rgba(0, 0, 0, 0.06);
-      padding: 32px 28px;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      transition: all 0.2s;
-      min-height: 480px;
-    }
+        .app-card {
+            max-width: 720px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 48px;
+            box-shadow: 0 24px 48px rgba(0, 20, 40, 0.2), 0 8px 16px rgba(0, 0, 0, 0.06);
+            padding: 32px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.2s;
+            min-height: 480px;
+        }
 
-    h1, h2, h3 {
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: #0b1e2b;
-    }
+        h1,
+        h2,
+        h3 {
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #0b1e2b;
+        }
 
-    h1 { font-size: 1.9rem; margin-bottom: 0.2rem; }
-    h2 { font-size: 1.5rem; display: flex; align-items: center; gap: 6px; }
-    h3 { font-size: 1.1rem; color: #1a3c52; margin-bottom: 8px; }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.2rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        h3 {
+            font-size: 1.1rem;
+            color: #1a3c52;
+            margin-bottom: 8px;
+        }
 
-    .subhead {
-      color: #3e5a6b;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-      border-left: 3px solid #3a86c4;
-      padding-left: 12px;
-      background: rgba(58, 134, 196, 0.04);
-      border-radius: 0 8px 8px 0;
-    }
+        .subhead {
+            color: #3e5a6b;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid #3a86c4;
+            padding-left: 12px;
+            background: rgba(58, 134, 196, 0.04);
+            border-radius: 0 8px 8px 0;
+        }
 
-    /* ----- формы ----- */
-    .form-group { margin-bottom: 1.2rem; }
-    label {
-      display: block;
-      font-weight: 500;
-      font-size: 0.9rem;
-      color: #1f3b4c;
-      margin-bottom: 4px;
-    }
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 1rem;
-      background: white;
-      border: 1px solid #d4dfe8;
-      border-radius: 30px;
-      outline: none;
-      transition: 0.2s;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-    }
-    input:focus {
-      border-color: #2a7fbd;
-      box-shadow: 0 0 0 4px rgba(42, 127, 189, 0.15), inset 0 2px 4px rgba(0,0,0,0.02);
-    }
+        /* ----- формы ----- */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #1f3b4c;
+            margin-bottom: 4px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            background: white;
+            border: 1px solid #d4dfe8;
+            border-radius: 30px;
+            outline: none;
+            transition: 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        input:focus {
+            border-color: #2a7fbd;
+            box-shadow: 0 0 0 4px rgba(42, 127, 189, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: #1f4b6e;
-      color: white;
-      font-weight: 600;
-      font-size: 1rem;
-      padding: 14px 28px;
-      border: none;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: 0.2s;
-      width: 100%;
-      box-shadow: 0 8px 16px -6px rgba(26, 67, 113, 0.2);
-    }
-    .btn:hover {
-      background: #123a56;
-      transform: scale(1.01);
-      box-shadow: 0 10px 20px -6px rgba(18, 58, 86, 0.3);
-    }
-    .btn-outline {
-      background: transparent;
-      color: #1f4b6e;
-      border: 1.5px solid #b6cfdf;
-      box-shadow: none;
-      padding: 8px 18px;
-      width: auto;
-      font-weight: 500;
-    }
-    .btn-outline:hover {
-      background: #e3eef7;
-      border-color: #2a7fbd;
-      transform: none;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-    }
-    .btn-danger {
-      background: #b13e4b;
-    }
-    .btn-danger:hover {
-      background: #8f2f3b;
-    }
-    .btn-sm {
-      padding: 6px 14px;
-      font-size: 0.85rem;
-      width: auto;
-    }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #1f4b6e;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            box-shadow: 0 8px 16px -6px rgba(26, 67, 113, 0.2);
+        }
+        .btn:hover {
+            background: #123a56;
+            transform: scale(1.01);
+            box-shadow: 0 10px 20px -6px rgba(18, 58, 86, 0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #1f4b6e;
+            border: 1.5px solid #b6cfdf;
+            box-shadow: none;
+            padding: 8px 18px;
+            width: auto;
+            font-weight: 500;
+        }
+        .btn-outline:hover {
+            background: #e3eef7;
+            border-color: #2a7fbd;
+            transform: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+        .btn-danger {
+            background: #b13e4b;
+        }
+        .btn-danger:hover {
+            background: #8f2f3b;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            width: auto;
+        }
+        .btn-primary {
+            background: #2a7fbd;
+        }
+        .btn-primary:hover {
+            background: #1b6296;
+        }
 
-    .error-msg {
-      background: #fce9eb;
-      color: #a1323f;
-      padding: 10px 16px;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      border-left: 4px solid #b13e4b;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        .error-msg {
+            background: #fce9eb;
+            color: #a1323f;
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #b13e4b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    /* ----- навигационные цепочки ----- */
-    .breadcrumb {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px 10px;
-      font-size: 0.85rem;
-      color: #3e647e;
-      background: rgba(255,255,255,0.5);
-      padding: 8px 16px;
-      border-radius: 40px;
-      margin-bottom: 16px;
-      border: 1px solid #dce8f2;
-    }
-    .breadcrumb span { color: #1f4b6e; font-weight: 500; }
-    .breadcrumb .sep { color: #8aaec9; font-weight: 300; }
-    .breadcrumb .crumb-link {
-      cursor: pointer;
-      color: #2a7fbd;
-      font-weight: 500;
-      transition: 0.15s;
-    }
-    .breadcrumb .crumb-link:hover {
-      color: #0f4a70;
-      text-decoration: underline;
-    }
+        /* ----- навигационные цепочки ----- */
+        .breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 10px;
+            font-size: 0.85rem;
+            color: #3e647e;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 8px 16px;
+            border-radius: 40px;
+            margin-bottom: 16px;
+            border: 1px solid #dce8f2;
+        }
+        .breadcrumb span {
+            color: #1f4b6e;
+            font-weight: 500;
+        }
+        .breadcrumb .sep {
+            color: #8aaec9;
+            font-weight: 300;
+        }
+        .breadcrumb .crumb-link {
+            cursor: pointer;
+            color: #2a7fbd;
+            font-weight: 500;
+            transition: 0.15s;
+        }
+        .breadcrumb .crumb-link:hover {
+            color: #0f4a70;
+            text-decoration: underline;
+        }
 
-    /* ----- списки страниц ----- */
-    .page-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin: 14px 0 16px;
-    }
-    .page-list-item {
-      background: white;
-      border-radius: 60px;
-      padding: 14px 22px;
-      border: 1px solid #e2edf6;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: 0.15s;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-    .page-list-item:hover {
-      background: #f4faff;
-      border-color: #b8d2e8;
-      transform: translateX(4px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-    .page-list-item .badge {
-      background: #dbe9f5;
-      color: #124263;
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 4px 14px;
-      border-radius: 30px;
-      letter-spacing: 0.3px;
-    }
-    .page-list-item .sub-badge {
-      background: #e8f0f8;
-      color: #2d5b7a;
-      font-size: 0.65rem;
-      padding: 2px 12px;
-      border-radius: 30px;
-    }
+        /* ----- списки страниц ----- */
+        .page-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 14px 0 16px;
+        }
+        .page-list-item {
+            background: white;
+            border-radius: 60px;
+            padding: 14px 22px;
+            border: 1px solid #e2edf6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.15s;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .page-list-item:hover {
+            background: #f4faff;
+            border-color: #b8d2e8;
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .page-list-item .badge {
+            background: #dbe9f5;
+            color: #124263;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+        .page-list-item .sub-badge {
+            background: #e8f0f8;
+            color: #2d5b7a;
+            font-size: 0.65rem;
+            padding: 2px 12px;
+            border-radius: 30px;
+        }
 
-    /* ----- контент страницы (уровень 3) ----- */
-    .page-content {
-      background: white;
-      border-radius: 28px;
-      padding: 22px 24px;
-      margin: 14px 0 16px;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.02), 0 6px 12px rgba(0, 20, 30, 0.04);
-      border: 1px solid #eef4f8;
-    }
-    .page-content p {
-      line-height: 1.7;
-      color: #1e3849;
-      font-size: 0.98rem;
-    }
-    .page-content p:not(:last-child) { margin-bottom: 0.8rem; }
+        /* ----- контент страницы (уровень 3) ----- */
+        .page-content {
+            background: white;
+            border-radius: 28px;
+            padding: 22px 24px;
+            margin: 14px 0 16px;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02), 0 6px 12px rgba(0, 20, 30, 0.04);
+            border: 1px solid #eef4f8;
+        }
+        .page-content p {
+            line-height: 1.7;
+            color: #1e3849;
+            font-size: 0.98rem;
+        }
+        .page-content p:not(:last-child) {
+            margin-bottom: 0.8rem;
+        }
 
-    .flex-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .flex-center { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-    .mt-2 { margin-top: 14px; }
-    .gap-2 { gap: 10px; }
-    .text-muted { color: #476c84; font-size: 0.85rem; }
-    .hidden { display: none !important; }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .flex-center {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .mt-2 {
+            margin-top: 14px;
+        }
+        .gap-2 {
+            gap: 10px;
+        }
+        .text-muted {
+            color: #476c84;
+            font-size: 0.85rem;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .hidden {
+            display: none !important;
+        }
 
-    hr {
-      border: none;
-      border-top: 1px solid #dbe5ed;
-      margin: 16px 0 12px;
-    }
+        hr {
+            border: none;
+            border-top: 1px solid #dbe5ed;
+            margin: 16px 0 12px;
+        }
 
-    /* ----- анимация смены экрана ----- */
-    .screen {
-      animation: fadeSlide 0.25s ease forwards;
-    }
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(12px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
+        /* ----- анимация смены экрана ----- */
+        .screen {
+            animation: fadeSlide 0.25s ease forwards;
+        }
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    @media (max-width: 480px) {
-      .app-card { padding: 20px 14px; }
-      .flex-row { flex-direction: column; align-items: stretch; }
-      .breadcrumb { font-size: 0.75rem; padding: 6px 12px; }
-    }
-  </style>
+        /* ----- адрес в углу (для наглядности) ----- */
+        .url-display {
+            font-size: 0.7rem;
+            color: #6d8da6;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px solid #d4e2ee;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.2px;
+        }
+
+        /* ----- главная страница (публичная) ----- */
+        .welcome-icon {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 18px 0;
+        }
+        .feature-item {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 16px 12px;
+            text-align: center;
+            border: 1px solid #e2edf6;
+        }
+        .feature-item .icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .feature-item .label {
+            font-size: 0.8rem;
+            color: #1f3b4c;
+            font-weight: 500;
+        }
+
+        @media (max-width: 500px) {
+            .feature-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-card {
+                padding: 20px 14px;
+            }
+            .flex-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .breadcrumb {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="app-card" id="appContainer">
+    <div class="app-card" id="appContainer">
 
-  <!-- ======== ЭКРАН 1: АВТОРИЗАЦИЯ ======== -->
-  <div id="loginScreen" class="screen">
-    <h1>🔐 Вход</h1>
-    <div class="subhead">Трехуровневая структура · переход по экранам</div>
-    <div id="loginError" class="error-msg hidden"><span>⚠️</span> Неверный логин или пароль</div>
-    <form id="loginForm" autocomplete="off">
-      <div class="form-group">
-        <label for="usernameInput">Логин</label>
-        <input type="text" id="usernameInput" placeholder="auditor" value="auditor" />
-      </div>
-      <div class="form-group">
-        <label for="passwordInput">Пароль</label>
-        <input type="password" id="passwordInput" placeholder="••••••••" value="123456" />
-      </div>
-      <button type="submit" class="btn">Войти</button>
-    </form>
-    <div style="margin-top: 18px; font-size: 0.82rem; color: #4b6e86; background: #e7f0f8; padding: 8px 16px; border-radius: 40px; text-align: center;">
-      ⚡ demo: auditor / 123456
+        <!-- ======== ЭКРАН: ГЛАВНАЯ (публичная) (/#/) ======== -->
+        <div id="homeScreen" class="screen">
+            <div class="flex-row">
+                <h1>🏠 Главная</h1>
+                <span class="url-display">#/</span>
+            </div>
+            <div class="subhead">Добро пожаловать на наш сайт</div>
+
+            <div class="welcome-icon">🚀</div>
+            <p style="text-align: center; color: #1f3b4c; margin-bottom: 18px;">
+                Трехуровневая структура с человеческими URL.<br />
+                Здесь вы найдёте полезную информацию о продуктах, услугах и компании.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="icon">📘</span>
+                    <span class="label">Продукты</span>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">📗</span>
+                    <span class="label">Услуги</span>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">📕</span>
+                    <span class="label">О компании</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+                <button id="goToLoginBtn" class="btn btn-primary" style="width: auto; padding: 12px 32px;">
+                    🔐 Войти
+                </button>
+                <button id="goToDashboardBtn" class="btn btn-outline" style="width: auto; padding: 12px 32px; display: none;">
+                    📂 Перейти в панель
+                </button>
+            </div>
+
+            <hr />
+            <div class="flex-row" style="justify-content: center;">
+                <span class="text-muted">Публичная страница · войдите для доступа к разделам</span>
+            </div>
+        </div>
+
+        <!-- ======== ЭКРАН: АВТОРИЗАЦИЯ (/#/login) ======== -->
+        <div id="loginScreen" class="screen hidden">
+            <div class="flex-row">
+                <h1>🔐 Вход</h1>
+                <span class="url-display">#/login</span>
+            </div>
+            <div class="subhead">Войдите, чтобы получить доступ к разделам</div>
+            <div id="loginError" class="error-msg hidden"><span>⚠️</span> Неверный логин или пароль</div>
+            <form id="loginForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="usernameInput">Логин</label>
+                    <input type="text" id="usernameInput" placeholder="auditor" value="auditor" />
+                </div>
+                <div class="form-group">
+                    <label for="passwordInput">Пароль</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••" value="123456" />
+                </div>
+                <button type="submit" class="btn">Войти</button>
+            </form>
+            <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button id="backToHomeFromLogin" class="btn btn-outline btn-sm">← На главную</button>
+            </div>
+            <div style="margin-top: 12px; font-size: 0.82rem; color: #4b6e86; background: #e7f0f8; padding: 8px 16px; border-radius: 40px; text-align: center;">
+                ⚡ demo: auditor / 123456
+            </div>
+        </div>
+
+        <!-- ======== ЭКРАН: ДАШБОРД (список разделов) (/#/dashboard) ======== -->
+        <div id="dashboardScreen" class="screen hidden">
+            <div class="flex-row">
+                <h2>📂 Разделы</h2>
+                <div class="flex-center">
+                    <span class="url-display">#/dashboard</span>
+                    <button id="logoutBtnDashboard" class="btn btn-outline btn-danger btn-sm">Выйти</button>
+                </div>
+            </div>
+            <div class="subhead">Выберите раздел — перейдёте на страницу с подстраницами</div>
+
+            <div class="page-list" id="level1List">
+                <div class="page-list-item" data-slug="products">
+                    <span>📘 Продукты</span>
+                    <span class="badge">/products</span>
+                </div>
+                <div class="page-list-item" data-slug="services">
+                    <span>📗 Услуги</span>
+                    <span class="badge">/services</span>
+                </div>
+                <div class="page-list-item" data-slug="company">
+                    <span>📕 О компании</span>
+                    <span class="badge">/company</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px;">
+                <button id="backToHomeFromDashboard" class="btn btn-outline btn-sm">← На главную</button>
+            </div>
+            <hr />
+            <div class="flex-row" style="justify-content: flex-end;">
+                <span class="text-muted">Вы авторизованы · 3 уровня</span>
+            </div>
+        </div>
+
+        <!-- ======== ЭКРАН: СПИСОК ПОДСТРАНИЦ (/#/products, /#/services, /#/company) ======== -->
+        <div id="level2Screen" class="screen hidden">
+            <div class="flex-row">
+                <h2 id="level2Title">📄 Подстраницы</h2>
+                <div class="flex-center">
+                    <span class="url-display" id="level2Url">#/</span>
+                    <button id="backToDashboardFromL2" class="btn btn-outline btn-sm">← Разделы</button>
+                </div>
+            </div>
+            <div class="breadcrumb">
+                <span class="crumb-link" id="l2BreadcrumbBack">Разделы</span>
+                <span class="sep">›</span>
+                <span id="l2BreadcrumbSection">Раздел</span>
+                <span class="sep">›</span>
+                <span>выберите подстраницу</span>
+            </div>
+            <div class="page-list" id="level2List">
+                <!-- сюда динамически вставляются 3 подстраницы -->
+            </div>
+            <button id="logoutBtnL2" class="btn btn-outline btn-danger btn-sm" style="margin-top: 6px;">Выйти</button>
+        </div>
+
+        <!-- ======== ЭКРАН: СОДЕРЖИМОЕ ПОДСТРАНИЦЫ (/#/products/household, /#/services/repair, etc.) ======== -->
+        <div id="level3Screen" class="screen hidden">
+            <div class="flex-row">
+                <h2 id="level3Title">📖 Страница</h2>
+                <div class="flex-center">
+                    <span class="url-display" id="level3Url">#/</span>
+                    <button id="backToLevel2FromL3" class="btn btn-outline btn-sm">← Подстраницы</button>
+                </div>
+            </div>
+            <div class="breadcrumb">
+                <span class="crumb-link" id="l3BreadcrumbSection">Раздел</span>
+                <span class="sep">›</span>
+                <span class="crumb-link" id="l3BreadcrumbSub">Подстраница</span>
+                <span class="sep">›</span>
+                <span>содержание</span>
+            </div>
+            <div id="level3Content" class="page-content">
+                <!-- сюда вставляется текст -->
+            </div>
+            <button id="logoutBtnL3" class="btn btn-outline btn-danger btn-sm" style="margin-top: 6px;">Выйти</button>
+        </div>
+
     </div>
-  </div>
 
-  <!-- ======== ЭКРАН 2: ГЛАВНАЯ (список 3-х разделов) ======== -->
-  <div id="mainScreen" class="screen hidden">
-    <div class="flex-row">
-      <h2>📂 Разделы</h2>
-      <button id="logoutBtnMain" class="btn btn-outline btn-danger btn-sm">Выйти</button>
-    </div>
-    <div class="subhead">Выберите раздел — перейдёте на экран с подстраницами</div>
+    <script>
+        (function() {
+            "use strict";
 
-    <div class="page-list" id="level1List">
-      <div class="page-list-item" data-section="section1">
-        <span>📘 Продукты</span>
-        <span class="badge">раздел</span>
-      </div>
-      <div class="page-list-item" data-section="section2">
-        <span>📗 Услуги</span>
-        <span class="badge">раздел</span>
-      </div>
-      <div class="page-list-item" data-section="section3">
-        <span>📕 О компании</span>
-        <span class="badge">раздел</span>
-      </div>
-    </div>
+            // ----- DOM -----
+            var homeScreen = document.getElementById('homeScreen');
+            var loginScreen = document.getElementById('loginScreen');
+            var dashboardScreen = document.getElementById('dashboardScreen');
+            var level2Screen = document.getElementById('level2Screen');
+            var level3Screen = document.getElementById('level3Screen');
 
-    <hr />
-    <div class="flex-row" style="justify-content: flex-end;">
-      <span class="text-muted">Вы авторизованы · 3 уровня</span>
-    </div>
-  </div>
+            var goToLoginBtn = document.getElementById('goToLoginBtn');
+            var goToDashboardBtn = document.getElementById('goToDashboardBtn');
+            var backToHomeFromLogin = document.getElementById('backToHomeFromLogin');
+            var backToHomeFromDashboard = document.getElementById('backToHomeFromDashboard');
 
-  <!-- ======== ЭКРАН 3: СПИСОК ПОДСТРАНИЦ (уровень 2) ======== -->
-  <div id="level2Screen" class="screen hidden">
-    <div class="flex-row">
-      <h2 id="level2Title">📄 Подстраницы</h2>
-      <button id="backToMainFromL2" class="btn btn-outline btn-sm">← Разделы</button>
-    </div>
-    <div class="breadcrumb">
-      <span class="crumb-link" id="l2BreadcrumbBack">Разделы</span>
-      <span class="sep">›</span>
-      <span id="l2BreadcrumbSection">Раздел</span>
-      <span class="sep">›</span>
-      <span>выберите подстраницу</span>
-    </div>
-    <div class="page-list" id="level2List">
-      <!-- сюда динамически вставляются 3 подстраницы -->
-    </div>
-    <button id="logoutBtnL2" class="btn btn-outline btn-danger btn-sm" style="margin-top: 6px;">Выйти</button>
-  </div>
+            var loginForm = document.getElementById('loginForm');
+            var loginError = document.getElementById('loginError');
+            var usernameInput = document.getElementById('usernameInput');
+            var passwordInput = document.getElementById('passwordInput');
+            var logoutBtnDashboard = document.getElementById('logoutBtnDashboard');
+            var logoutBtnL2 = document.getElementById('logoutBtnL2');
+            var logoutBtnL3 = document.getElementById('logoutBtnL3');
 
-  <!-- ======== ЭКРАН 4: СОДЕРЖИМОЕ ПОДСТРАНИЦЫ (уровень 3) ======== -->
-  <div id="level3Screen" class="screen hidden">
-    <div class="flex-row">
-      <h2 id="level3Title">📖 Страница</h2>
-      <button id="backToLevel2FromL3" class="btn btn-outline btn-sm">← Подстраницы</button>
-    </div>
-    <div class="breadcrumb">
-      <span class="crumb-link" id="l3BreadcrumbSection">Раздел</span>
-      <span class="sep">›</span>
-      <span class="crumb-link" id="l3BreadcrumbSub">Подстраница</span>
-      <span class="sep">›</span>
-      <span>содержание</span>
-    </div>
-    <div id="level3Content" class="page-content">
-      <!-- сюда вставляется текст -->
-    </div>
-    <button id="logoutBtnL3" class="btn btn-outline btn-danger btn-sm" style="margin-top: 6px;">Выйти</button>
-  </div>
+            var level1List = document.getElementById('level1List');
+            var level2List = document.getElementById('level2List');
+            var level2Title = document.getElementById('level2Title');
+            var level2Url = document.getElementById('level2Url');
+            var l2BreadcrumbSection = document.getElementById('l2BreadcrumbSection');
+            var l2BreadcrumbBack = document.getElementById('l2BreadcrumbBack');
+            var backToDashboardFromL2 = document.getElementById('backToDashboardFromL2');
 
-</div>
+            var level3Title = document.getElementById('level3Title');
+            var level3Url = document.getElementById('level3Url');
+            var level3Content = document.getElementById('level3Content');
+            var l3BreadcrumbSection = document.getElementById('l3BreadcrumbSection');
+            var l3BreadcrumbSub = document.getElementById('l3BreadcrumbSub');
+            var backToLevel2FromL3 = document.getElementById('backToLevel2FromL3');
 
-<script>
-  (function() {
-    "use strict";
+            // ----- ДАННЫЕ: 3 раздела × 3 подстраницы с ЧЕЛОВЕЧЕСКИМИ SLUG -----
+            var sections = {
+                products: {
+                    id: 'products',
+                    name: 'Продукты',
+                    icon: '📘',
+                    url: '/products',
+                    subs: {
+                        household: {
+                            slug: 'household',
+                            title: 'Товары для дома',
+                            url: '/products/household',
+                            content: '<p><strong>Товары для дома</strong> — мебель, текстиль, посуда и декор.</p><p>Экологичные материалы, современный дизайн, доступные цены.</p><p>Мягкая мебель, светильники, ковры, шторы, аксессуары.</p>'
+                        },
+                        electronics: {
+                            slug: 'electronics',
+                            title: 'Электроника',
+                            url: '/products/electronics',
+                            content: '<p><strong>Электроника</strong> — смартфоны, ноутбуки, наушники, умные устройства.</p><p>Только проверенные бренды с гарантией. Быстрая доставка.</p><p>Акции и рассрочка на популярные модели.</p>'
+                        },
+                        clothing: {
+                            slug: 'clothing',
+                            title: 'Одежда и аксессуары',
+                            url: '/products/clothing',
+                            content: '<p><strong>Одежда и аксессуары</strong> — коллекции для мужчин, женщин и детей.</p><p>Натуральные ткани, стильные решения для повседневной жизни.</p><p>Сумки, часы, украшения, головные уборы.</p>'
+                        }
+                    }
+                },
+                services: {
+                    id: 'services',
+                    name: 'Услуги',
+                    icon: '📗',
+                    url: '/services',
+                    subs: {
+                        repair: {
+                            slug: 'repair',
+                            title: 'Ремонт и отделка',
+                            url: '/services/repair',
+                            content: '<p><strong>Ремонт и отделка</strong> под ключ. Квартиры, офисы, коммерческие пространства.</p><p>Дизайн-проект, подбор материалов, контроль качества.</p><p>Гарантия на все виды работ до 5 лет.</p>'
+                        },
+                        consulting: {
+                            slug: 'consulting',
+                            title: 'Консалтинг',
+                            url: '/services/consulting',
+                            content: '<p><strong>Консалтинг</strong> для бизнеса: стратегия, оптимизация, маркетинг, управление.</p><p>Опытные эксперты, индивидуальный подход, измеримые результаты.</p><p>Конфиденциальность и полная поддержка.</p>'
+                        },
+                        it: {
+                            slug: 'it',
+                            title: 'IT-решения',
+                            url: '/services/it',
+                            content: '<p><strong>IT-решения</strong> — разработка сайтов, мобильных приложений, CRM.</p><p>Современные технологии, гибкая методология, интеграция.</p><p>Техническая поддержка и сопровождение.</p>'
+                        }
+                    }
+                },
+                company: {
+                    id: 'company',
+                    name: 'О компании',
+                    icon: '📕',
+                    url: '/company',
+                    subs: {
+                        history: {
+                            slug: 'history',
+                            title: 'История',
+                            url: '/company/history',
+                            content: '<p><strong>История компании</strong> началась в 2015 году с небольшого стартапа.</p><p>За 10 лет выросли в надёжного партнёра, расширили направления.</p><p>Сегодня нас более 120 сотрудников, офисы в 5 городах.</p>'
+                        },
+                        team: {
+                            slug: 'team',
+                            title: 'Команда',
+                            url: '/company/team',
+                            content: '<p><strong>Команда</strong> — профессионалы с опытом в своих областях.</p><p>Инженеры, дизайнеры, менеджеры, консультанты.</p><p>Ценим инициативу, уважаем друг друга, постоянно учимся.</p>'
+                        },
+                        contacts: {
+                            slug: 'contacts',
+                            title: 'Контакты',
+                            url: '/company/contacts',
+                            content: '<p><strong>Свяжитесь с нами</strong> любым удобным способом.</p><p>📧 Email: info@example.com<br>📞 Телефон: +7 (999) 555-11-22<br>📍 Адрес: г. Москва, ул. Новая, д. 10</p><p>Режим работы: пн–пт 9:00–20:00, сб 10:00–17:00.</p>'
+                        }
+                    }
+                }
+            };
 
-    // ----- DOM -----
-    const loginScreen = document.getElementById('loginScreen');
-    const mainScreen = document.getElementById('mainScreen');
-    const level2Screen = document.getElementById('level2Screen');
-    const level3Screen = document.getElementById('level3Screen');
+            // ----- состояние -----
+            var isAuth = false;
+            var currentSectionId = null;
+            var currentSubSlug = null;
 
-    const loginForm = document.getElementById('loginForm');
-    const loginError = document.getElementById('loginError');
-    const usernameInput = document.getElementById('usernameInput');
-    const passwordInput = document.getElementById('passwordInput');
-    const logoutBtnMain = document.getElementById('logoutBtnMain');
-    const logoutBtnL2 = document.getElementById('logoutBtnL2');
-    const logoutBtnL3 = document.getElementById('logoutBtnL3');
+            // ----- Роутер -----
+            function navigate(hash) {
+                var path = hash.replace(/^#/, '') || '/';
 
-    const level1List = document.getElementById('level1List');
-    const level2List = document.getElementById('level2List');
-    const level2Title = document.getElementById('level2Title');
-    const l2BreadcrumbSection = document.getElementById('l2BreadcrumbSection');
-    const l2BreadcrumbBack = document.getElementById('l2BreadcrumbBack');
-    const backToMainFromL2 = document.getElementById('backToMainFromL2');
+                // ---- ПУБЛИЧНЫЕ СТРАНИЦЫ ----
+                if (path === '/') {
+                    showHomeScreen();
+                    return;
+                }
 
-    const level3Title = document.getElementById('level3Title');
-    const level3Content = document.getElementById('level3Content');
-    const l3BreadcrumbSection = document.getElementById('l3BreadcrumbSection');
-    const l3BreadcrumbSub = document.getElementById('l3BreadcrumbSub');
-    const backToLevel2FromL3 = document.getElementById('backToLevel2FromL3');
+                if (path === '/login') {
+                    showLoginScreen();
+                    return;
+                }
 
-    // ----- ДАННЫЕ: 3 раздела × 3 подстраницы -----
-    const sections = {
-      section1: {
-        name: 'Продукты',
-        icon: '📘',
-        subs: {
-          sub1_1: {
-            title: 'Товары для дома',
-            content: `<p><strong>Товары для дома</strong> — мебель, текстиль, посуда и декор.</p>
-                      <p>Экологичные материалы, современный дизайн, доступные цены.</p>
-                      <p>Мягкая мебель, светильники, ковры, шторы, аксессуары.</p>`
-          },
-          sub1_2: {
-            title: 'Электроника',
-            content: `<p><strong>Электроника</strong> — смартфоны, ноутбуки, наушники, умные устройства.</p>
-                      <p>Только проверенные бренды с гарантией. Быстрая доставка.</p>
-                      <p>Акции и рассрочка на популярные модели.</p>`
-          },
-          sub1_3: {
-            title: 'Одежда и аксессуары',
-            content: `<p><strong>Одежда и аксессуары</strong> — коллекции для мужчин, женщин и детей.</p>
-                      <p>Натуральные ткани, стильные решения для повседневной жизни.</p>
-                      <p>Сумки, часы, украшения, головные уборы.</p>`
-          }
-        }
-      },
-      section2: {
-        name: 'Услуги',
-        icon: '📗',
-        subs: {
-          sub2_1: {
-            title: 'Ремонт и отделка',
-            content: `<p><strong>Ремонт и отделка</strong> под ключ. Квартиры, офисы, коммерческие пространства.</p>
-                      <p>Дизайн-проект, подбор материалов, контроль качества.</p>
-                      <p>Гарантия на все виды работ до 5 лет.</p>`
-          },
-          sub2_2: {
-            title: 'Консалтинг',
-            content: `<p><strong>Консалтинг</strong> для бизнеса: стратегия, оптимизация, маркетинг, управление.</p>
-                      <p>Опытные эксперты, индивидуальный подход, измеримые результаты.</p>
-                      <p>Конфиденциальность и полная поддержка.</p>`
-          },
-          sub2_3: {
-            title: 'IT-решения',
-            content: `<p><strong>IT-решения</strong> — разработка сайтов, мобильных приложений, CRM.</p>
-                      <p>Современные технологии, гибкая методология, интеграция.</p>
-                      <p>Техническая поддержка и сопровождение.</p>`
-          }
-        }
-      },
-      section3: {
-        name: 'О компании',
-        icon: '📕',
-        subs: {
-          sub3_1: {
-            title: 'История',
-            content: `<p><strong>История компании</strong> началась в 2015 году с небольшого стартапа.</p>
-                      <p>За 10 лет выросли в надёжного партнёра, расширили направления.</p>
-                      <p>Сегодня нас более 120 сотрудников, офисы в 5 городах.</p>`
-          },
-          sub3_2: {
-            title: 'Команда',
-            content: `<p><strong>Команда</strong> — профессионалы с опытом в своих областях.</p>
-                      <p>Инженеры, дизайнеры, менеджеры, консультанты.</p>
-                      <p>Ценим инициативу, уважаем друг друга, постоянно учимся.</p>`
-          },
-          sub3_3: {
-            title: 'Контакты',
-            content: `<p><strong>Свяжитесь с нами</strong> любым удобным способом.</p>
-                      <p>📧 Email: info@example.com<br>📞 Телефон: +7 (999) 555-11-22<br>📍 Адрес: г. Москва, ул. Новая, д. 10</p>
-                      <p>Режим работы: пн–пт 9:00–20:00, сб 10:00–17:00.</p>`
-          }
-        }
-      }
-    };
+                // ---- ЗАЩИЩЕННЫЕ СТРАНИЦЫ ----
+                if (!isAuth) {
+                    setHash('/login');
+                    return;
+                }
 
-    // ----- состояние -----
-    let currentSection = null;   // 'section1', 'section2', 'section3'
-    let currentSub = null;      // 'sub1_1', ... 'sub3_3'
+                if (path === '/dashboard') {
+                    showDashboardScreen();
+                    return;
+                }
 
-    // ----- функции переключения экранов -----
-    function showScreen(screenElement) {
-      // скрыть все
-      [loginScreen, mainScreen, level2Screen, level3Screen].forEach(el => el.classList.add('hidden'));
-      // показать нужный
-      screenElement.classList.remove('hidden');
-    }
+                // ---- РАЗДЕЛЫ (уровень 2) ----
+                // Проверяем, является ли путь одним из разделов: /products, /services, /company
+                if (path === '/products' || path === '/services' || path === '/company') {
+                    var sectionId = path.replace('/', '');
+                    if (sections[sectionId]) {
+                        showLevel2Screen(sectionId);
+                        return;
+                    }
+                }
 
-    function goToLogin() {
-      showScreen(loginScreen);
-      loginError.classList.add('hidden');
-      currentSection = null;
-      currentSub = null;
-    }
+                // ---- ПОДСТРАНИЦЫ (уровень 3) ----
+                // Проверяем паттерн: /products/household, /services/repair, /company/history и т.д.
+                var subMatch = path.match(/^\/(products|services|company)\/([^/]+)$/);
+                if (subMatch) {
+                    var sectionSlug = subMatch[1];
+                    var subSlug = subMatch[2];
+                    if (sections[sectionSlug] && sections[sectionSlug].subs[subSlug]) {
+                        showLevel3Screen(sectionSlug, subSlug);
+                        return;
+                    } else {
+                        // если подстраница не найдена — редирект на раздел
+                        setHash('/' + sectionSlug);
+                        return;
+                    }
+                }
 
-    function goToMain() {
-      showScreen(mainScreen);
-      currentSection = null;
-      currentSub = null;
-    }
+                // неизвестный путь — на главную
+                setHash('/');
+            }
 
-    // переход на экран 2 (список подстраниц)
-    function goToLevel2(sectionId) {
-      const section = sections[sectionId];
-      if (!section) return;
+            // ----- функции переключения экранов -----
+            function showScreen(screenElement) {
+                var screens = [homeScreen, loginScreen, dashboardScreen, level2Screen, level3Screen];
+                for (var i = 0; i < screens.length; i++) {
+                    screens[i].classList.add('hidden');
+                }
+                screenElement.classList.remove('hidden');
+            }
 
-      currentSection = sectionId;
-      currentSub = null;
+            function showHomeScreen() {
+                showScreen(homeScreen);
+                goToLoginBtn.style.display = 'inline-flex';
+                goToDashboardBtn.style.display = isAuth ? 'inline-flex' : 'none';
+                currentSectionId = null;
+                currentSubSlug = null;
+            }
 
-      // заголовок
-      level2Title.textContent = `${section.icon} ${section.name}`;
-      l2BreadcrumbSection.textContent = section.name;
+            function showLoginScreen() {
+                showScreen(loginScreen);
+                loginError.classList.add('hidden');
+                if (isAuth) {
+                    setHash('/dashboard');
+                }
+            }
 
-      // генерируем список подстраниц
-      let html = '';
-      for (const [subId, subData] of Object.entries(section.subs)) {
-        html += `
-          <div class="page-list-item" data-sub="${subId}">
-            <span>📄 ${subData.title}</span>
-            <span class="sub-badge">подстраница</span>
-          </div>
-        `;
-      }
-      level2List.innerHTML = html;
+            function showDashboardScreen() {
+                if (!isAuth) { setHash('/login'); return; }
+                showScreen(dashboardScreen);
+                currentSectionId = null;
+                currentSubSlug = null;
+            }
 
-      // навешиваем обработчики
-      level2List.querySelectorAll('.page-list-item').forEach(item => {
-        item.addEventListener('click', function() {
-          const subId = this.dataset.sub;
-          if (subId) goToLevel3(sectionId, subId);
-        });
-      });
+            function showLevel2Screen(sectionSlug) {
+                if (!isAuth) { setHash('/login'); return; }
+                var section = sections[sectionSlug];
+                if (!section) { setHash('/dashboard'); return; }
 
-      showScreen(level2Screen);
-    }
+                currentSectionId = sectionSlug;
+                currentSubSlug = null;
 
-    // переход на экран 3 (содержимое подстраницы)
-    function goToLevel3(sectionId, subId) {
-      const section = sections[sectionId];
-      if (!section) return;
-      const sub = section.subs[subId];
-      if (!sub) return;
+                level2Title.textContent = section.icon + ' ' + section.name;
+                l2BreadcrumbSection.textContent = section.name;
+                level2Url.textContent = '#' + section.url;
 
-      currentSub = subId;
+                var html = '';
+                for (var subSlug in section.subs) {
+                    var subData = section.subs[subSlug];
+                    html += `
+                        <div class="page-list-item" data-sub="${subSlug}">
+                            <span>📄 ${subData.title}</span>
+                            <span class="sub-badge">${subData.url}</span>
+                        </div>
+                    `;
+                }
+                level2List.innerHTML = html;
 
-      // заголовки и хлебные крошки
-      level3Title.textContent = `📖 ${sub.title}`;
-      l3BreadcrumbSection.textContent = section.name;
-      l3BreadcrumbSub.textContent = sub.title;
+                var items = level2List.querySelectorAll('.page-list-item');
+                for (var i = 0; i < items.length; i++) {
+                    (function(item) {
+                        item.addEventListener('click', function() {
+                            var subSlug = this.dataset.sub;
+                            if (subSlug) {
+                                setHash(section.url + '/' + subSlug);
+                            }
+                        });
+                    })(items[i]);
+                }
 
-      // контент
-      level3Content.innerHTML = `<h3 style="margin-bottom:10px; color:#0b2a3f;">${sub.title}</h3>${sub.content}`;
+                showScreen(level2Screen);
+            }
 
-      // ссылки в хлебных крошках
-      l3BreadcrumbSection.onclick = () => goToLevel2(sectionId);
-      l3BreadcrumbSub.onclick = () => goToLevel2(sectionId);
+            function showLevel3Screen(sectionSlug, subSlug) {
+                if (!isAuth) { setHash('/login'); return; }
+                var section = sections[sectionSlug];
+                if (!section) { setHash('/dashboard'); return; }
+                var sub = section.subs[subSlug];
+                if (!sub) { setHash('/' + sectionSlug); return; }
 
-      showScreen(level3Screen);
-    }
+                currentSectionId = sectionSlug;
+                currentSubSlug = subSlug;
 
-    // ----- обработчики -----
+                level3Title.textContent = '📖 ' + sub.title;
+                level3Url.textContent = '#' + sub.url;
+                l3BreadcrumbSection.textContent = section.name;
+                l3BreadcrumbSub.textContent = sub.title;
 
-    // 1. Авторизация
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const user = usernameInput.value.trim();
-      const pass = passwordInput.value.trim();
-      if (user === 'auditor' && pass === '123456') {
-        loginError.classList.add('hidden');
-        goToMain();
-      } else {
-        loginError.classList.remove('hidden');
-      }
-    });
-    usernameInput.addEventListener('input', () => loginError.classList.add('hidden'));
-    passwordInput.addEventListener('input', () => loginError.classList.add('hidden'));
+                level3Content.innerHTML = '<h3 style="margin-bottom:10px; color:#0b2a3f;">' + sub.title + '</h3>' + sub.content;
 
-    // 2. Выход (со всех экранов)
-    [logoutBtnMain, logoutBtnL2, logoutBtnL3].forEach(btn => {
-      btn.addEventListener('click', goToLogin);
-    });
+                l3BreadcrumbSection.onclick = function() {
+                    setHash(section.url);
+                };
+                l3BreadcrumbSub.onclick = function() {
+                    setHash(section.url);
+                };
 
-    // 3. Клик по разделу (уровень 1) → переход на экран 2
-    level1List.querySelectorAll('.page-list-item').forEach(item => {
-      item.addEventListener('click', function() {
-        const sectionId = this.dataset.section;
-        if (sectionId && sections[sectionId]) {
-          goToLevel2(sectionId);
-        }
-      });
-    });
+                showScreen(level3Screen);
+            }
 
-    // 4. Назад к разделам (с экрана 2)
-    backToMainFromL2.addEventListener('click', goToMain);
-    l2BreadcrumbBack.addEventListener('click', goToMain);
+            // ----- работа с хешем -----
+            function setHash(path) {
+                if (path.charAt(0) !== '/') path = '/' + path;
+                window.location.hash = path;
+            }
 
-    // 5. Назад к подстраницам (с экрана 3)
-    backToLevel2FromL3.addEventListener('click', function() {
-      if (currentSection) goToLevel2(currentSection);
-    });
+            function onHashChange() {
+                var hash = window.location.hash || '#/';
+                navigate(hash);
+            }
 
-    // 6. Инициализация
-    goToLogin();
+            // ----- обработчики -----
 
-    console.log('✅ Трехуровневый сайт (экранная навигация)');
-    console.log('auditor / 123456 · 3 раздела × 3 подстраницы');
-  })();
-</script>
+            // 1. Кнопка "Войти" на главной
+            goToLoginBtn.addEventListener('click', function() {
+                setHash('/login');
+            });
+
+            // 2. Кнопка "Перейти в панель" на главной
+            goToDashboardBtn.addEventListener('click', function() {
+                setHash('/dashboard');
+            });
+
+            // 3. Назад на главную со страницы входа
+            backToHomeFromLogin.addEventListener('click', function() {
+                setHash('/');
+            });
+
+            // 4. Назад на главную с дашборда
+            backToHomeFromDashboard.addEventListener('click', function() {
+                setHash('/');
+            });
+
+            // 5. Авторизация
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var user = usernameInput.value.trim();
+                var pass = passwordInput.value.trim();
+                if (user === 'auditor' && pass === '123456') {
+                    loginError.classList.add('hidden');
+                    isAuth = true;
+                    setHash('/dashboard');
+                } else {
+                    loginError.classList.remove('hidden');
+                }
+            });
+
+            // Скрываем ошибку при вводе
+            usernameInput.addEventListener('input', function() {
+                loginError.classList.add('hidden');
+            });
+            passwordInput.addEventListener('input', function() {
+                loginError.classList.add('hidden');
+            });
+
+            // 6. Выход
+            logoutBtnDashboard.addEventListener('click', function() {
+                isAuth = false;
+                setHash('/');
+            });
+            logoutBtnL2.addEventListener('click', function() {
+                isAuth = false;
+                setHash('/');
+            });
+            logoutBtnL3.addEventListener('click', function() {
+                isAuth = false;
+                setHash('/');
+            });
+
+            // 7. Клик по разделу (уровень 1)
+            var level1Items = level1List.querySelectorAll('.page-list-item');
+            for (var i = 0; i < level1Items.length; i++) {
+                (function(item) {
+                    item.addEventListener('click', function() {
+                        var slug = this.dataset.slug;
+                        if (slug && sections[slug]) {
+                            setHash('/' + slug);
+                        }
+                    });
+                })(level1Items[i]);
+            }
+
+            // 8. Назад к разделам (с экрана 2)
+            backToDashboardFromL2.addEventListener('click', function() {
+                setHash('/dashboard');
+            });
+            l2BreadcrumbBack.addEventListener('click', function() {
+                setHash('/dashboard');
+            });
+
+            // 9. Назад к подстраницам (с экрана 3)
+            backToLevel2FromL3.addEventListener('click', function() {
+                if (currentSectionId) {
+                    setHash('/' + currentSectionId);
+                } else {
+                    setHash('/dashboard');
+                }
+            });
+
+            // 10. Слушаем изменение хеша
+            window.addEventListener('hashchange', onHashChange);
+
+            // 11. Инициализация
+            if (!window.location.hash) {
+                setHash('/');
+            } else {
+                onHashChange();
+            }
+
+            console.log('✅ Сайт с человеческими URL запущен');
+            console.log('Доступные маршруты:');
+            console.log('  #/                      — главная');
+            console.log('  #/login                 — вход');
+            console.log('  #/dashboard             — панель');
+            console.log('  #/products              — Продукты');
+            console.log('  #/products/household    — Товары для дома');
+            console.log('  #/products/electronics  — Электроника');
+            console.log('  #/products/clothing     — Одежда');
+            console.log('  #/services              — Услуги');
+            console.log('  #/services/repair       — Ремонт');
+            console.log('  #/services/consulting   — Консалтинг');
+            console.log('  #/services/it           — IT-решения');
+            console.log('  #/company               — О компании');
+            console.log('  #/company/history       — История');
+            console.log('  #/company/team          — Команда');
+            console.log('  #/company/contacts      — Контакты');
+            console.log('Логин: auditor / 123456');
+        })();
+    </script>
 </body>
 </html>
