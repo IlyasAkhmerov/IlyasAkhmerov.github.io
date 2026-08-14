@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Трехуровневый сайт · data-test-id</title>
+    <title>Трехуровневый сайт · чистые URL</title>
     <style>
         /* ----- общая база ----- */
         * {
@@ -376,17 +376,17 @@
 
     <div class="app-card" id="appContainer" data-test-id="app-container">
 
-        <!-- ======== ЭКРАН: ГЛАВНАЯ (публичная) (/#/) ======== -->
+        <!-- ======== ЭКРАН: ГЛАВНАЯ (публичная) (/) ======== -->
         <div id="homeScreen" class="screen" data-test-id="screen-home">
             <div class="flex-row">
                 <h1 data-test-id="home-title">🏠 Главная</h1>
-                <span class="url-display" data-test-id="home-url">#/</span>
+                <span class="url-display" data-test-id="home-url">/</span>
             </div>
             <div class="subhead" data-test-id="home-subhead">Добро пожаловать на наш сайт</div>
 
             <div class="welcome-icon" data-test-id="home-icon">🚀</div>
             <p style="text-align: center; color: #1f3b4c; margin-bottom: 18px;" data-test-id="home-description">
-                Трехуровневая структура с человеческими URL.<br />
+                Трехуровневая структура с чистыми URL.<br />
                 Здесь вы найдёте полезную информацию о продуктах, услугах и компании.
             </p>
 
@@ -420,11 +420,11 @@
             </div>
         </div>
 
-        <!-- ======== ЭКРАН: АВТОРИЗАЦИЯ (/#/login) ======== -->
+        <!-- ======== ЭКРАН: АВТОРИЗАЦИЯ (/login) ======== -->
         <div id="loginScreen" class="screen hidden" data-test-id="screen-login">
             <div class="flex-row">
                 <h1 data-test-id="login-title">🔐 Вход</h1>
-                <span class="url-display" data-test-id="login-url">#/login</span>
+                <span class="url-display" data-test-id="login-url">/login</span>
             </div>
             <div class="subhead" data-test-id="login-subhead">Войдите, чтобы получить доступ к разделам</div>
             <div id="loginError" class="error-msg hidden" data-test-id="login-error"><span>⚠️</span> Неверный логин или пароль</div>
@@ -447,12 +447,12 @@
             </div>
         </div>
 
-        <!-- ======== ЭКРАН: ДАШБОРД (список разделов) (/#/dashboard) ======== -->
+        <!-- ======== ЭКРАН: ДАШБОРД (список разделов) (/dashboard) ======== -->
         <div id="dashboardScreen" class="screen hidden" data-test-id="screen-dashboard">
             <div class="flex-row">
                 <h2 data-test-id="dashboard-title">📂 Разделы</h2>
                 <div class="flex-center">
-                    <span class="url-display" data-test-id="dashboard-url">#/dashboard</span>
+                    <span class="url-display" data-test-id="dashboard-url">/dashboard</span>
                     <button id="logoutBtnDashboard" class="btn btn-outline btn-danger btn-sm" data-test-id="dashboard-logout-btn">Выйти</button>
                 </div>
             </div>
@@ -482,12 +482,12 @@
             </div>
         </div>
 
-        <!-- ======== ЭКРАН: СПИСОК ПОДСТРАНИЦ (/#/products, /#/services, /#/company) ======== -->
+        <!-- ======== ЭКРАН: СПИСОК ПОДСТРАНИЦ (/products, /services, /company) ======== -->
         <div id="level2Screen" class="screen hidden" data-test-id="screen-level2">
             <div class="flex-row">
                 <h2 id="level2Title" data-test-id="level2-title">📄 Подстраницы</h2>
                 <div class="flex-center">
-                    <span class="url-display" id="level2Url" data-test-id="level2-url">#/</span>
+                    <span class="url-display" id="level2Url" data-test-id="level2-url">/</span>
                     <button id="backToDashboardFromL2" class="btn btn-outline btn-sm" data-test-id="level2-back-dashboard">← Разделы</button>
                 </div>
             </div>
@@ -504,12 +504,12 @@
             <button id="logoutBtnL2" class="btn btn-outline btn-danger btn-sm" style="margin-top: 6px;" data-test-id="level2-logout-btn">Выйти</button>
         </div>
 
-        <!-- ======== ЭКРАН: СОДЕРЖИМОЕ ПОДСТРАНИЦЫ (/#/products/household, /#/services/repair, etc.) ======== -->
+        <!-- ======== ЭКРАН: СОДЕРЖИМОЕ ПОДСТРАНИЦЫ (/products/household, /services/repair, etc.) ======== -->
         <div id="level3Screen" class="screen hidden" data-test-id="screen-level3">
             <div class="flex-row">
                 <h2 id="level3Title" data-test-id="level3-title">📖 Страница</h2>
                 <div class="flex-center">
-                    <span class="url-display" id="level3Url" data-test-id="level3-url">#/</span>
+                    <span class="url-display" id="level3Url" data-test-id="level3-url">/</span>
                     <button id="backToLevel2FromL3" class="btn btn-outline btn-sm" data-test-id="level3-back-level2">← Подстраницы</button>
                 </div>
             </div>
@@ -567,7 +567,7 @@
             var l3BreadcrumbSub = document.getElementById('l3BreadcrumbSub');
             var backToLevel2FromL3 = document.getElementById('backToLevel2FromL3');
 
-            // ----- ДАННЫЕ: 3 раздела × 3 подстраницы с ЧЕЛОВЕЧЕСКИМИ SLUG -----
+            // ----- ДАННЫЕ: 3 раздела × 3 подстраницы -----
             var sections = {
                 products: {
                     id: 'products',
@@ -654,12 +654,15 @@
             var currentSectionId = null;
             var currentSubSlug = null;
 
-            // ----- Роутер -----
-            function navigate(hash) {
-                var path = hash.replace(/^#/, '') || '/';
+            // ----- Роутер с History API -----
+            function navigate(path) {
+                // Убираем лишние слеши
+                if (path.length > 1 && path.endsWith('/')) {
+                    path = path.slice(0, -1);
+                }
 
                 // ---- ПУБЛИЧНЫЕ СТРАНИЦЫ ----
-                if (path === '/') {
+                if (path === '/' || path === '') {
                     showHomeScreen();
                     return;
                 }
@@ -671,7 +674,7 @@
 
                 // ---- ЗАЩИЩЕННЫЕ СТРАНИЦЫ ----
                 if (!isAuth) {
-                    setHash('/login');
+                    navigateTo('/login');
                     return;
                 }
 
@@ -698,12 +701,20 @@
                         showLevel3Screen(sectionSlug, subSlug);
                         return;
                     } else {
-                        setHash('/' + sectionSlug);
+                        navigateTo('/' + sectionSlug);
                         return;
                     }
                 }
 
-                setHash('/');
+                // неизвестный путь — на главную
+                navigateTo('/');
+            }
+
+            // ----- Навигация с обновлением URL -----
+            function navigateTo(path) {
+                if (path.charAt(0) !== '/') path = '/' + path;
+                window.history.pushState({ path: path }, '', path);
+                navigate(path);
             }
 
             // ----- функции переключения экранов -----
@@ -721,34 +732,36 @@
                 goToDashboardBtn.style.display = isAuth ? 'inline-flex' : 'none';
                 currentSectionId = null;
                 currentSubSlug = null;
+                // Обновляем URL в отображении
+                document.querySelector('[data-test-id="home-url"]').textContent = '/';
             }
 
             function showLoginScreen() {
                 showScreen(loginScreen);
                 loginError.classList.add('hidden');
                 if (isAuth) {
-                    setHash('/dashboard');
+                    navigateTo('/dashboard');
                 }
             }
 
             function showDashboardScreen() {
-                if (!isAuth) { setHash('/login'); return; }
+                if (!isAuth) { navigateTo('/login'); return; }
                 showScreen(dashboardScreen);
                 currentSectionId = null;
                 currentSubSlug = null;
             }
 
             function showLevel2Screen(sectionSlug) {
-                if (!isAuth) { setHash('/login'); return; }
+                if (!isAuth) { navigateTo('/login'); return; }
                 var section = sections[sectionSlug];
-                if (!section) { setHash('/dashboard'); return; }
+                if (!section) { navigateTo('/dashboard'); return; }
 
                 currentSectionId = sectionSlug;
                 currentSubSlug = null;
 
                 level2Title.textContent = section.icon + ' ' + section.name;
                 l2BreadcrumbSection.textContent = section.name;
-                level2Url.textContent = '#' + section.url;
+                level2Url.textContent = section.url;
 
                 var html = '';
                 for (var subSlug in section.subs) {
@@ -768,7 +781,7 @@
                         item.addEventListener('click', function() {
                             var subSlug = this.dataset.sub;
                             if (subSlug) {
-                                setHash(section.url + '/' + subSlug);
+                                navigateTo(section.url + '/' + subSlug);
                             }
                         });
                     })(items[i]);
@@ -778,17 +791,17 @@
             }
 
             function showLevel3Screen(sectionSlug, subSlug) {
-                if (!isAuth) { setHash('/login'); return; }
+                if (!isAuth) { navigateTo('/login'); return; }
                 var section = sections[sectionSlug];
-                if (!section) { setHash('/dashboard'); return; }
+                if (!section) { navigateTo('/dashboard'); return; }
                 var sub = section.subs[subSlug];
-                if (!sub) { setHash('/' + sectionSlug); return; }
+                if (!sub) { navigateTo('/' + sectionSlug); return; }
 
                 currentSectionId = sectionSlug;
                 currentSubSlug = subSlug;
 
                 level3Title.textContent = '📖 ' + sub.title;
-                level3Url.textContent = '#' + sub.url;
+                level3Url.textContent = sub.url;
                 l3BreadcrumbSection.textContent = section.name;
                 l3BreadcrumbSub.textContent = sub.title;
 
@@ -796,42 +809,37 @@
                     .title + '</h3>' + sub.content;
 
                 l3BreadcrumbSection.onclick = function() {
-                    setHash(section.url);
+                    navigateTo(section.url);
                 };
                 l3BreadcrumbSub.onclick = function() {
-                    setHash(section.url);
+                    navigateTo(section.url);
                 };
 
                 showScreen(level3Screen);
             }
 
-            // ----- работа с хешем -----
-            function setHash(path) {
-                if (path.charAt(0) !== '/') path = '/' + path;
-                window.location.hash = path;
-            }
+            // ----- Обработка кнопки "Назад" в браузере -----
+            window.addEventListener('popstate', function(event) {
+                var path = window.location.pathname;
+                navigate(path);
+            });
 
-            function onHashChange() {
-                var hash = window.location.hash || '#/';
-                navigate(hash);
-            }
-
-            // ----- обработчики -----
+            // ----- Обработчики -----
 
             goToLoginBtn.addEventListener('click', function() {
-                setHash('/login');
+                navigateTo('/login');
             });
 
             goToDashboardBtn.addEventListener('click', function() {
-                setHash('/dashboard');
+                navigateTo('/dashboard');
             });
 
             backToHomeFromLogin.addEventListener('click', function() {
-                setHash('/');
+                navigateTo('/');
             });
 
             backToHomeFromDashboard.addEventListener('click', function() {
-                setHash('/');
+                navigateTo('/');
             });
 
             loginForm.addEventListener('submit', function(e) {
@@ -841,7 +849,7 @@
                 if (user === 'auditor' && pass === '123456') {
                     loginError.classList.add('hidden');
                     isAuth = true;
-                    setHash('/dashboard');
+                    navigateTo('/dashboard');
                 } else {
                     loginError.classList.remove('hidden');
                 }
@@ -856,15 +864,15 @@
 
             logoutBtnDashboard.addEventListener('click', function() {
                 isAuth = false;
-                setHash('/');
+                navigateTo('/');
             });
             logoutBtnL2.addEventListener('click', function() {
                 isAuth = false;
-                setHash('/');
+                navigateTo('/');
             });
             logoutBtnL3.addEventListener('click', function() {
                 isAuth = false;
-                setHash('/');
+                navigateTo('/');
             });
 
             var level1Items = level1List.querySelectorAll('.page-list-item');
@@ -873,37 +881,49 @@
                     item.addEventListener('click', function() {
                         var slug = this.dataset.slug;
                         if (slug && sections[slug]) {
-                            setHash('/' + slug);
+                            navigateTo('/' + slug);
                         }
                     });
                 })(level1Items[i]);
             }
 
             backToDashboardFromL2.addEventListener('click', function() {
-                setHash('/dashboard');
+                navigateTo('/dashboard');
             });
             l2BreadcrumbBack.addEventListener('click', function() {
-                setHash('/dashboard');
+                navigateTo('/dashboard');
             });
 
             backToLevel2FromL3.addEventListener('click', function() {
                 if (currentSectionId) {
-                    setHash('/' + currentSectionId);
+                    navigateTo('/' + currentSectionId);
                 } else {
-                    setHash('/dashboard');
+                    navigateTo('/dashboard');
                 }
             });
 
-            window.addEventListener('hashchange', onHashChange);
+            // ----- Инициализация -----
+            var initialPath = window.location.pathname || '/';
+            navigate(initialPath);
 
-            if (!window.location.hash) {
-                setHash('/');
-            } else {
-                onHashChange();
-            }
-
-            console.log('✅ Сайт с data-test-id запущен');
+            console.log('✅ Сайт с чистыми URL запущен (без #)');
             console.log('Логин: auditor / 123456');
+            console.log('Доступные маршруты:');
+            console.log('  /                      — главная');
+            console.log('  /login                 — вход');
+            console.log('  /dashboard             — панель');
+            console.log('  /products              — Продукты');
+            console.log('  /products/household    — Товары для дома');
+            console.log('  /products/electronics  — Электроника');
+            console.log('  /products/clothing     — Одежда');
+            console.log('  /services              — Услуги');
+            console.log('  /services/repair       — Ремонт');
+            console.log('  /services/consulting   — Консалтинг');
+            console.log('  /services/it           — IT-решения');
+            console.log('  /company               — О компании');
+            console.log('  /company/history       — История');
+            console.log('  /company/team          — Команда');
+            console.log('  /company/contacts      — Контакты');
         })();
     </script>
 </body>
