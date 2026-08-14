@@ -3,22 +3,160 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test Crawl Site · Главная</title>
+    <title>Главная</title>
+    <base href="/" />
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="app-card">
-        <h1>🏠 Test Crawl Site</h1>
-        <p>This is the public main page</p>
-        <ul>
-            <li><a href="/login">Login page (auditor)</a></li>
-            <li><a href="/dashboard">Dashboard (requires login) — will redirect to login if not logged in.</a></li>
-            <li><a href="/products">Products (requires login) — will redirect to login if not logged in.</a></li>
-            <li><a href="/services">Services (requires login) — will redirect to login if not logged in.</a></li>
-            <li><a href="/company">About Company (requires login) — will redirect to login if not logged in.</a></li>
-            <li><a href="/protected/extra">Deeper protected page (requires login) — will redirect to login if not logged in.</a></li>
-        </ul>
+
+    <div class="app-card" id="appContainer" data-test-id="app-container">
+
+        <!-- ======== ЭКРАН: ГЛАВНАЯ (публичная) (/) ======== -->
+        <div id="homeScreen" class="screen" data-test-id="screen-home">
+            <h1 data-test-id="home-title">Главная</h1>
+
+            <div class="subhead" data-test-id="home-subhead">Добро пожаловать на наш сайт</div>
+
+            <p style="color: #3e5a6b; margin-bottom: 24px; line-height: 1.6;" data-test-id="home-description">
+                Трехуровневая структура с чистыми URL.<br />
+                Здесь вы найдёте полезную информацию о продуктах, услугах и компании.
+            </p>
+
+            <ul class="nav-list" data-test-id="home-nav-list">
+                <li data-test-id="nav-products">
+                    <span class="nav-icon">📘</span>
+                    <a href="/products" class="nav-link" data-test-id="link-products">Продукты</a>
+                </li>
+                <li data-test-id="nav-services">
+                    <span class="nav-icon">📗</span>
+                    <a href="/services" class="nav-link" data-test-id="link-services">Услуги</a>
+                </li>
+                <li data-test-id="nav-company">
+                    <span class="nav-icon">📕</span>
+                    <a href="/company" class="nav-link" data-test-id="link-company">О компании</a>
+                </li>
+            </ul>
+
+            <div style="margin-top: 24px;">
+                <a href="/login" class="btn btn-primary" style="width: auto; padding: 12px 32px; text-decoration: none; display: inline-block;" data-test-id="home-go-to-login">
+                    🔐 Войти
+                </a>
+            </div>
+
+            <hr />
+            <div style="text-align: center;">
+                <span class="text-muted" data-test-id="home-footer">Публичная страница · войдите для доступа к разделам</span>
+            </div>
+        </div>
+
+        <!-- ======== ЭКРАН: АВТОРИЗАЦИЯ (/login) ======== -->
+        <div id="loginScreen" class="screen hidden" data-test-id="screen-login">
+            <div class="flex-row">
+                <h1 data-test-id="login-title">🔐 Вход</h1>
+                <span class="url-display" data-test-id="login-url">/login</span>
+            </div>
+            <div class="subhead" data-test-id="login-subhead">Войдите, чтобы получить доступ к разделам</div>
+            <div id="loginError" class="error-msg hidden" data-test-id="login-error"><span>⚠️</span> Неверный логин или пароль</div>
+            <form id="loginForm" autocomplete="off" data-test-id="login-form">
+                <div class="form-group">
+                    <label for="usernameInput" data-test-id="login-username-label">Логин</label>
+                    <input type="text" id="usernameInput" placeholder="auditor" value="auditor" data-test-id="login-username-input" />
+                </div>
+                <div class="form-group">
+                    <label for="passwordInput" data-test-id="login-password-label">Пароль</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••" value="123456" data-test-id="login-password-input" />
+                </div>
+                <button type="submit" class="btn" data-test-id="login-submit-btn">Войти</button>
+            </form>
+            <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <a href="/" class="btn btn-outline btn-sm" style="text-decoration: none;" data-test-id="login-back-home">← На главную</a>
+            </div>
+            <div style="margin-top: 12px; font-size: 0.82rem; color: #4b6e86; background: #e7f0f8; padding: 8px 16px; border-radius: 40px; text-align: center;" data-test-id="login-demo">
+                ⚡ demo: auditor / 123456
+            </div>
+        </div>
+
+        <!-- ======== ЭКРАН: ДАШБОРД (список разделов) (/dashboard) ======== -->
+        <div id="dashboardScreen" class="screen hidden" data-test-id="screen-dashboard">
+            <div class="flex-row">
+                <h2 data-test-id="dashboard-title">📂 Разделы</h2>
+                <div class="flex-center">
+                    <span class="url-display" data-test-id="dashboard-url">/dashboard</span>
+                    <a href="/" class="btn btn-outline btn-danger btn-sm" style="text-decoration: none;" data-test-id="dashboard-logout-btn">Выйти</a>
+                </div>
+            </div>
+            <div class="subhead" data-test-id="dashboard-subhead">Выберите раздел — перейдёте на страницу с подстраницами</div>
+
+            <div class="page-list" id="level1List" data-test-id="dashboard-section-list">
+                <a href="/products" class="page-list-item" data-slug="products" data-test-id="section-products" style="text-decoration: none; color: inherit;">
+                    <span>📘 Продукты</span>
+                    <span class="badge">/products</span>
+                </a>
+                <a href="/services" class="page-list-item" data-slug="services" data-test-id="section-services" style="text-decoration: none; color: inherit;">
+                    <span>📗 Услуги</span>
+                    <span class="badge">/services</span>
+                </a>
+                <a href="/company" class="page-list-item" data-slug="company" data-test-id="section-company" style="text-decoration: none; color: inherit;">
+                    <span>📕 О компании</span>
+                    <span class="badge">/company</span>
+                </a>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px;">
+                <a href="/" class="btn btn-outline btn-sm" style="text-decoration: none;" data-test-id="dashboard-back-home">← На главную</a>
+            </div>
+            <hr />
+            <div class="flex-row" style="justify-content: flex-end;">
+                <span class="text-muted" data-test-id="dashboard-footer">Вы авторизованы · 3 уровня</span>
+            </div>
+        </div>
+
+        <!-- ======== ЭКРАН: СПИСОК ПОДСТРАНИЦ (/products, /services, /company) ======== -->
+        <div id="level2Screen" class="screen hidden" data-test-id="screen-level2">
+            <div class="flex-row">
+                <h2 id="level2Title" data-test-id="level2-title">📄 Подстраницы</h2>
+                <div class="flex-center">
+                    <span class="url-display" id="level2Url" data-test-id="level2-url">/</span>
+                    <a href="/dashboard" class="btn btn-outline btn-sm" style="text-decoration: none;" data-test-id="level2-back-dashboard">← Разделы</a>
+                </div>
+            </div>
+            <div class="breadcrumb" data-test-id="level2-breadcrumb">
+                <a href="/dashboard" class="crumb-link" id="l2BreadcrumbBack" data-test-id="level2-breadcrumb-dashboard" style="text-decoration: none;">Разделы</a>
+                <span class="sep">›</span>
+                <span id="l2BreadcrumbSection" data-test-id="level2-breadcrumb-section">Раздел</span>
+                <span class="sep">›</span>
+                <span data-test-id="level2-breadcrumb-label">выберите подстраницу</span>
+            </div>
+            <div class="page-list" id="level2List" data-test-id="level2-sub-list">
+                <!-- сюда динамически вставляются 3 подстраницы -->
+            </div>
+            <a href="/" class="btn btn-outline btn-danger btn-sm" style="margin-top: 6px; text-decoration: none;" data-test-id="level2-logout-btn">Выйти</a>
+        </div>
+
+        <!-- ======== ЭКРАН: СОДЕРЖИМОЕ ПОДСТРАНИЦЫ (/products/household, /services/repair, etc.) ======== -->
+        <div id="level3Screen" class="screen hidden" data-test-id="screen-level3">
+            <div class="flex-row">
+                <h2 id="level3Title" data-test-id="level3-title">📖 Страница</h2>
+                <div class="flex-center">
+                    <span class="url-display" id="level3Url" data-test-id="level3-url">/</span>
+                    <a href="#" id="backToLevel2FromL3" class="btn btn-outline btn-sm" style="text-decoration: none;" data-test-id="level3-back-level2">← Подстраницы</a>
+                </div>
+            </div>
+            <div class="breadcrumb" data-test-id="level3-breadcrumb">
+                <a href="#" id="l3BreadcrumbSection" class="crumb-link" data-test-id="level3-breadcrumb-section" style="text-decoration: none;">Раздел</a>
+                <span class="sep">›</span>
+                <a href="#" id="l3BreadcrumbSub" class="crumb-link" data-test-id="level3-breadcrumb-sub" style="text-decoration: none;">Подстраница</a>
+                <span class="sep">›</span>
+                <span data-test-id="level3-breadcrumb-label">содержание</span>
+            </div>
+            <div id="level3Content" class="page-content" data-test-id="level3-content">
+                <!-- сюда вставляется текст -->
+            </div>
+            <a href="/" class="btn btn-outline btn-danger btn-sm" style="margin-top: 6px; text-decoration: none;" data-test-id="level3-logout-btn">Выйти</a>
+        </div>
+
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>

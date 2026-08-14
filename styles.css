@@ -314,34 +314,78 @@ hr {
     letter-spacing: 0.2px;
 }
 
-/* ----- главная страница (публичная) ----- */
-.welcome-icon {
-    font-size: 3.5rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
+/* ----- навигационные ссылки на главной ----- */
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
 }
-.feature-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+
+.nav-list li {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
     gap: 12px;
-    margin: 18px 0;
+    border-bottom: 1px solid #f0f4f8;
 }
-.feature-item {
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 20px;
-    padding: 16px 12px;
-    text-align: center;
-    border: 1px solid #e2edf6;
+
+.nav-list li:last-child {
+    border-bottom: none;
 }
-.feature-item .icon {
-    font-size: 1.8rem;
-    display: block;
-    margin-bottom: 4px;
+
+.nav-icon {
+    font-size: 1.2rem;
+    display: inline-block;
+    width: 30px;
 }
-.feature-item .label {
-    font-size: 0.8rem;
-    color: #1f3b4c;
+
+.nav-link {
+    color: #2a7fbd;
+    text-decoration: none;
     font-weight: 500;
+    font-size: 1rem;
+    transition: 0.15s;
+}
+
+.nav-link:hover {
+    color: #0f4a70;
+    text-decoration: underline;
+}
+
+/* Стиль для публичной главной */
+#homeScreen h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.3rem;
+}
+
+#homeScreen .subhead {
+    font-size: 1rem;
+    color: #3e5a6b;
+    margin-bottom: 1rem;
+    border-left: 3px solid #3a86c4;
+    padding-left: 12px;
+}
+
+/* Стили для кнопки Войти на главной */
+#homeScreen .btn-primary {
+    background: #2a7fbd;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 8px 16px -6px rgba(26, 67, 113, 0.2);
+    text-decoration: none;
+    display: inline-block;
+}
+
+#homeScreen .btn-primary:hover {
+    background: #1b6296;
+    transform: scale(1.01);
+    box-shadow: 0 10px 20px -6px rgba(18, 58, 86, 0.3);
 }
 
 @media (max-width: 500px) {

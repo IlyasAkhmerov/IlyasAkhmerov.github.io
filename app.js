@@ -112,36 +112,67 @@
     var currentSectionId = null;
     var currentSubSlug = null;
 
+    // ----- Проверка, является ли путь защищенным (требует авторизации) -----
+    function isProtectedRoute(path) {
+        var protectedRoutes = ['/dashboard', '/products', '/services', '/company', '/protected/extra'];
+        for (var i = 0; i < protectedRoutes.length; i++) {
+            if (path === protectedRoutes[i]) {
+                return true;
+            }
+        }
+        // Проверяем подстраницы
+        if (path.match(/^\/(products|services|company)\/[^/]+$/)) {
+            return true;
+        }
+        return false;
+    }
+
     // ----- Роутер с History API -----
     function navigate(path) {
+        console.log('Navigating to:', path);
+
         // Убираем лишние слеши
         if (path.length > 1 && path.endsWith('/')) {
             path = path.slice(0, -1);
         }
 
-        // ---- ПУБЛИЧНЫЕ СТРАНИЦЫ ----
-        if (path === '/' || path === '') {
+        // Если это корень или пустой путь
+        if (path === '/' || path === '' || path === '/index.html') {
             showHomeScreen();
             return;
         }
 
-        if (path === '/login') {
+        // Если это страница логина
+        if (path === '/login' || path === '/login.html') {
             showLoginScreen();
             return;
         }
 
-        // ---- ЗАЩИЩЕННЫЕ СТРАНИЦЫ ----
-        if (!isAuth) {
+        // Если путь ведет на статический HTML файл - обрабатываем как SPA маршрут
+        if (path.endsWith('.html')) {
+            // Убираем .html
+            path = path.replace(/\.html$/, '');
+            // Если после удаления .html остается пустая строка или /, то это корень
+            if (path === '' || path === '/') {
+                showHomeScreen();
+                return;
+            }
+            // Продолжаем обработку уже без .html
+        }
+
+        // Проверяем, нужна ли авторизация
+        if (isProtectedRoute(path) && !isAuth) {
             navigateTo('/login');
             return;
         }
 
+        // Если это дашборд
         if (path === '/dashboard') {
             showDashboardScreen();
             return;
         }
 
-        // ---- РАЗДЕЛЫ (уровень 2) ----
+        // Если это раздел (products, services, company)
         if (path === '/products' || path === '/services' || path === '/company') {
             var sectionId = path.replace('/', '');
             if (sections[sectionId]) {
@@ -150,7 +181,7 @@
             }
         }
 
-        // ---- ПОДСТРАНИЦЫ (уровень 3) ----
+        // Если это подстраница
         var subMatch = path.match(/^\/(products|services|company)\/([^/]+)$/);
         if (subMatch) {
             var sectionSlug = subMatch[1];
@@ -159,18 +190,38 @@
                 showLevel3Screen(sectionSlug, subSlug);
                 return;
             } else {
+                // Если подстраница не найдена, редирект на раздел
                 navigateTo('/' + sectionSlug);
                 return;
             }
         }
 
-        // неизвестный путь — на главную
+        // Если это глубокая защищенная страница
+        if (path === '/protected/extra') {
+            if (!isAuth) {
+                navigateTo('/login');
+                return;
+            }
+            showLevel3Screen('protected', 'extra');
+            return;
+        }
+
+        // Если ничего не подошло — на главную
         navigateTo('/');
     }
 
     function navigateTo(path) {
+        console.log('NavigateTo:', path);
         if (path.charAt(0) !== '/') path = '/' + path;
-        // Используем pushState без перезагрузки
+
+        // Если путь заканчивается на .html, убираем для SPA
+        if (path.endsWith('.html')) {
+            path = path.replace(/\.html$/, '');
+            if (path === '' || path === '/') {
+                path = '/';
+            }
+        }
+
         window.history.pushState({ path: path }, '', path);
         navigate(path);
     }
@@ -181,7 +232,9 @@
         for (var i = 0; i < screens.length; i++) {
             screens[i].classList.add('hidden');
         }
-        screenElement.classList.remove('hidden');
+        if (screenElement) {
+            screenElement.classList.remove('hidden');
+        }
     }
 
     function showHomeScreen() {
@@ -192,6 +245,7 @@
         }
         currentSectionId = null;
         currentSubSlug = null;
+        console.log('Showing home screen');
     }
 
     function showLoginScreen() {
@@ -200,6 +254,7 @@
         if (isAuth) {
             navigateTo('/dashboard');
         }
+        console.log('Showing login screen');
     }
 
     function showDashboardScreen() {
@@ -207,6 +262,7 @@
         showScreen(dashboardScreen);
         currentSectionId = null;
         currentSubSlug = null;
+        console.log('Showing dashboard screen');
     }
 
     function showLevel2Screen(sectionSlug) {
@@ -234,12 +290,36 @@
         level2List.innerHTML = html;
 
         showScreen(level2Screen);
+        console.log('Showing level2 screen for:', sectionSlug);
     }
 
     function showLevel3Screen(sectionSlug, subSlug) {
         if (!isAuth) { navigateTo('/login'); return; }
+
         var section = sections[sectionSlug];
-        if (!section) { navigateTo('/dashboard'); return; }
+        if (!section) {
+            // Если это protected/extra
+            if (sectionSlug === 'protected' && subSlug === 'extra') {
+                level3Title.textContent = '🔐 Глубокая защищенная страница';
+                level3Url.textContent = '/protected/extra';
+                l3BreadcrumbSection.textContent = 'Защищенные страницы';
+                l3BreadcrumbSub.textContent = 'Дополнительная';
+                level3Content.innerHTML = `
+                    <h3 style="margin-bottom:10px; color:#0b2a3f;">Глубокая защищенная страница</h3>
+                    <p><strong>Это глубокая защищенная страница.</strong></p>
+                    <p>Она требует авторизации и находится глубже в структуре.</p>
+                    <p>Вы можете перейти к разделам или вернуться назад.</p>
+                `;
+                l3BreadcrumbSection.href = '/dashboard';
+                l3BreadcrumbSub.href = '/dashboard';
+                backToLevel2FromL3.href = '/dashboard';
+                showScreen(level3Screen);
+                return;
+            }
+            navigateTo('/dashboard');
+            return;
+        }
+
         var sub = section.subs[subSlug];
         if (!sub) {
             navigateTo('/' + sectionSlug);
@@ -257,33 +337,37 @@
         level3Content.innerHTML = '<h3 style="margin-bottom:10px; color:#0b2a3f;" data-test-id="level3-page-title">' + sub
             .title + '</h3>' + sub.content;
 
-        // Обновляем ссылки в хлебных крошках
         l3BreadcrumbSection.href = section.url;
         l3BreadcrumbSub.href = section.url;
         backToLevel2FromL3.href = section.url;
 
         showScreen(level3Screen);
+        console.log('Showing level3 screen for:', sectionSlug, subSlug);
     }
 
     // ----- Обработка кнопки "Назад" в браузере -----
     window.addEventListener('popstate', function(event) {
         var path = window.location.pathname;
+        console.log('Popstate:', path);
+        // Если путь заканчивается на .html, убираем для SPA
+        if (path.endsWith('.html')) {
+            path = path.replace(/\.html$/, '');
+            if (path === '' || path === '/') {
+                path = '/';
+            }
+        }
         navigate(path);
     });
 
-    // ----- Обработчики -----
-
-    // ГЛАВНЫЙ ОБРАБОТЧИК: перехватываем ВСЕ клики по ссылкам
+    // ----- ГЛАВНЫЙ ОБРАБОТЧИК: перехватываем клики по ссылкам -----
     document.addEventListener('click', function(e) {
-        // Находим ссылку, на которую кликнули
         var link = e.target.closest('a');
         if (!link) return;
 
-        // Проверяем, что это внутренняя ссылка
         var href = link.getAttribute('href');
         if (!href) return;
 
-        // Пропускаем внешние ссылки (http, https, //)
+        // Пропускаем внешние ссылки
         if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')) {
             return;
         }
@@ -293,34 +377,46 @@
             return;
         }
 
-        // Пропускаем якоря (якорные ссылки)
+        // Пропускаем якоря
         if (href.startsWith('#')) {
             return;
         }
 
         // Пропускаем ссылки на файлы с расширениями
-        if (href.match(/\.(pdf|jpg|jpeg|png|gif|svg|mp4|mp3|zip|rar|exe|dmg)$/i)) {
+        if (href.match(/\.(pdf|jpg|jpeg|png|gif|svg|mp4|mp3|zip|rar|exe|dmg|txt|csv|json|xml|yml|yaml)$/i)) {
             return;
         }
 
-        // Предотвращаем стандартное поведение браузера
+        // Предотвращаем стандартное поведение
         e.preventDefault();
+        console.log('Link clicked:', href);
+
+        // Убираем .html если есть
+        if (href.endsWith('.html')) {
+            href = href.replace(/\.html$/, '');
+            if (href === '' || href === '/') {
+                href = '/';
+            }
+        }
 
         // Навигация через SPA
         navigateTo(href);
     });
 
-    // Авторизация
+    // ----- Авторизация -----
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         var user = usernameInput.value.trim();
         var pass = passwordInput.value.trim();
+        console.log('Login attempt:', user, pass);
         if (user === 'auditor' && pass === '123456') {
             loginError.classList.add('hidden');
             isAuth = true;
+            console.log('Login successful');
             navigateTo('/dashboard');
         } else {
             loginError.classList.remove('hidden');
+            console.log('Login failed');
         }
     });
 
@@ -337,7 +433,8 @@
         var redirectPath = urlParams.get('redirect');
 
         if (redirectPath) {
-            // Убираем параметр redirect из URL без перезагрузки
+            redirectPath = decodeURIComponent(redirectPath);
+            console.log('Redirect from 404:', redirectPath);
             window.history.replaceState({}, '', redirectPath);
             return redirectPath;
         }
@@ -346,18 +443,29 @@
 
     // ----- Инициализация -----
     function init() {
-        // Проверяем редирект от 404.html (для GitHub Pages)
-        var redirectPath = handleRedirect();
-        var initialPath = redirectPath || window.location.pathname || '/';
+        console.log('Initializing app...');
 
-        // Обрабатываем начальный путь
-        if (initialPath === '/' || initialPath === '') {
-            navigate('/');
-        } else {
-            navigate(initialPath);
+        // Проверяем редирект
+        var redirectPath = handleRedirect();
+        if (redirectPath) {
+            navigate(redirectPath);
+            return;
         }
 
-        console.log('✅ Сайт с чистыми URL запущен');
+        var initialPath = window.location.pathname || '/';
+        console.log('Initial path:', initialPath);
+
+        // Если путь заканчивается на .html, убираем для SPA
+        if (initialPath.endsWith('.html')) {
+            initialPath = initialPath.replace(/\.html$/, '');
+            if (initialPath === '' || initialPath === '/') {
+                initialPath = '/';
+            }
+        }
+
+        navigate(initialPath);
+
+        console.log('✅ Сайт запущен');
         console.log('Логин: auditor / 123456');
         console.log('Доступные маршруты:');
         console.log('  /                      — главная');
@@ -375,6 +483,7 @@
         console.log('  /company/history       — История');
         console.log('  /company/team          — Команда');
         console.log('  /company/contacts      — Контакты');
+        console.log('  /protected/extra       — Глубокая защищенная страница');
     }
 
     init();

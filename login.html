@@ -13,15 +13,15 @@
         <form id="loginForm">
             <div>
                 <label>Username</label>
-                <input type="text" id="usernameInput" placeholder="admin" value="admin" />
+                <input type="text" id="usernameInput" placeholder="auditor" value="auditor" />
             </div>
             <div>
                 <label>Password</label>
-                <input type="password" id="passwordInput" placeholder="••••••••" value="1234" />
+                <input type="password" id="passwordInput" placeholder="••••••••" value="123456" />
             </div>
             <button type="submit" class="btn">Login</button>
         </form>
-        <p>⚡ demo: admin / 1234</p>
+        <p>⚡ demo: auditor / 123456</p>
         <a href="/">← Back to main</a>
     </div>
     <script>
@@ -29,7 +29,7 @@
             e.preventDefault();
             var user = document.getElementById('usernameInput').value.trim();
             var pass = document.getElementById('passwordInput').value.trim();
-            if (user === 'admin' && pass === '1234') {
+            if (user === 'auditor' && pass === '123456') {
                 window.location.href = '/dashboard';
             } else {
                 alert('Invalid username or password');
