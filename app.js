@@ -159,7 +159,6 @@
                 showLevel3Screen(sectionSlug, subSlug);
                 return;
             } else {
-                // Если подстраница не найдена — редирект на раздел
                 navigateTo('/' + sectionSlug);
                 return;
             }
@@ -171,6 +170,7 @@
 
     function navigateTo(path) {
         if (path.charAt(0) !== '/') path = '/' + path;
+        // Используем pushState без перезагрузки
         window.history.pushState({ path: path }, '', path);
         navigate(path);
     }
@@ -273,23 +273,40 @@
 
     // ----- Обработчики -----
 
-    // Общий обработчик для всех ссылок
+    // ГЛАВНЫЙ ОБРАБОТЧИК: перехватываем ВСЕ клики по ссылкам
     document.addEventListener('click', function(e) {
+        // Находим ссылку, на которую кликнули
         var link = e.target.closest('a');
         if (!link) return;
 
-        // Пропускаем ссылки с target="_blank", download, внешние ссылки
+        // Проверяем, что это внутренняя ссылка
+        var href = link.getAttribute('href');
+        if (!href) return;
+
+        // Пропускаем внешние ссылки (http, https, //)
+        if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')) {
+            return;
+        }
+
+        // Пропускаем ссылки с target="_blank" или download
         if (link.target === '_blank' || link.hasAttribute('download')) {
             return;
         }
 
-        var href = link.getAttribute('href');
-        if (!href || href.startsWith('http') || href.startsWith('//') || href.startsWith('#')) {
+        // Пропускаем якоря (якорные ссылки)
+        if (href.startsWith('#')) {
             return;
         }
 
-        // Обрабатываем только относительные ссылки
+        // Пропускаем ссылки на файлы с расширениями
+        if (href.match(/\.(pdf|jpg|jpeg|png|gif|svg|mp4|mp3|zip|rar|exe|dmg)$/i)) {
+            return;
+        }
+
+        // Предотвращаем стандартное поведение браузера
         e.preventDefault();
+
+        // Навигация через SPA
         navigateTo(href);
     });
 
@@ -298,7 +315,7 @@
         e.preventDefault();
         var user = usernameInput.value.trim();
         var pass = passwordInput.value.trim();
-        if (user === 'auditor' && pass === '123456') {
+        if (user === 'admin' && pass === '1234') {
             loginError.classList.add('hidden');
             isAuth = true;
             navigateTo('/dashboard');
@@ -320,6 +337,7 @@
         var redirectPath = urlParams.get('redirect');
 
         if (redirectPath) {
+            // Убираем параметр redirect из URL без перезагрузки
             window.history.replaceState({}, '', redirectPath);
             return redirectPath;
         }
@@ -328,28 +346,19 @@
 
     // ----- Инициализация -----
     function init() {
+        // Проверяем редирект от 404.html (для GitHub Pages)
         var redirectPath = handleRedirect();
         var initialPath = redirectPath || window.location.pathname || '/';
 
-        // Проверяем, есть ли путь подстраницы
-        var subMatch = initialPath.match(/^\/(products|services|company)\/([^/]+)$/);
-        if (subMatch) {
-            var sectionSlug = subMatch[1];
-            var subSlug = subMatch[2];
-            if (sections[sectionSlug] && sections[sectionSlug].subs[subSlug]) {
-                navigate(initialPath);
-                return;
-            }
-        }
-
-        if (initialPath !== '/' && !initialPath.match(/\.[a-zA-Z0-9]+$/)) {
-            navigate(initialPath);
-        } else {
+        // Обрабатываем начальный путь
+        if (initialPath === '/' || initialPath === '') {
             navigate('/');
+        } else {
+            navigate(initialPath);
         }
 
         console.log('✅ Сайт с чистыми URL запущен');
-        console.log('Логин: auditor / 123456');
+        console.log('Логин: admin / 1234');
         console.log('Доступные маршруты:');
         console.log('  /                      — главная');
         console.log('  /login                 — вход');
